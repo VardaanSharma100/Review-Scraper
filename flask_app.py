@@ -31,29 +31,27 @@ def index():
             searchstring = request.form['content'].replace(" ", "")
             logging.info(f"Search request received for product: {searchstring}")
 
-            flipkart_url = "https://www.flipkart.com/search?q=" + searchstring
-            uclient = uReq(flipkart_url)
-            flipkartpage = uclient.read()
-            uclient.close()
-            flipkart_html = bs(flipkartpage, "html.parser")
-
+            flipkart_url = f"https://www.flipkart.com/search?q={searchstring}"
+            headers = {
+                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                       "AppleWebKit/537.36 (KHTML, like Gecko) "
+                       "Chrome/112.0.0.0 Safari/537.36"
+                      }
+            resp = requests.get(flipkart_url, headers=headers, timeout=10)
+            flipkart_html = bs(resp.text, "html.parser")
             bigboxes = flipkart_html.find_all("div", {"class": "cPHDOP col-12-12"})
             del bigboxes[0:3]
             if not bigboxes:
                 logging.warning("No product boxes found")
                 return "No products found"
             box = bigboxes[0]
-
             productlink = "https://www.flipkart.com" + box.div.div.div.a["href"]
             logging.info(f"Product link: {productlink}")
-
-            prodres = requests.get(productlink)
-            prodres.encoding = 'utf-8'
+            prodres = requests.get(productlink, headers=headers, timeout=10)
             prod_html = bs(prodres.text, "html.parser")
-
             commentboxes = prod_html.find_all("div", {"class": "col EPCmJX"})
             filename = searchstring + ".csv"
-            
+          
             # Writing reviews to CSV
             with open(filename, 'w', encoding='utf-8') as fw:
                 headers = "Product, Customer Name, Rating, Heading, Comment \n"
