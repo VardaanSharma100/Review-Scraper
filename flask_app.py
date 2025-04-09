@@ -95,7 +95,7 @@ def index():
 
         except Exception as e:
           #  logging.error("Error processing request", exc_info=True)
-            return "Something went wrong. Please check the logs for details."
+            return f"Something went wrong. {e}"
     else:
         return render_template('index.html')
 
