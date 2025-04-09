@@ -46,7 +46,7 @@ def index():
 
             for commentbox in commentboxes:
                 try:
-                    name = commentbox.find_all("p", {"class": "row gHqwa8"})[0].text
+                    name = commentbox.find_all("p", {"class": "_2NsDsF AwS1CA"})[0].text
                 except:
                     name = 'No Name'
 
