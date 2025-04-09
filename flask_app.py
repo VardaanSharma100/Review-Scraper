@@ -98,9 +98,9 @@ def index():
 
         except Exception as e:
             logging.error("Error processing request", exc_info=True)
-            return "Something went wrong. Please check the logs for details."
+            return f"Something went wrong. Please check the logs for details.{e}"
     else:
-        return render_template('index.html')
+        return rendgit statuser_template('index.html')
 
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 5000))
